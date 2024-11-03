@@ -55,7 +55,10 @@ export default function Employee() {
     const [triggerFilter, setTriggerFilter] = useState<number>(0)
 
     const [data, setData] = useState<EmployeeProps[]>([])
-    const [loading, setLoading] = useState<boolean>(false)
+    const [loading, setLoading] = useState<{ active: boolean, for: "delete" | "fetch" | "off" }>({
+        active: false,
+        for: "delete"
+    })
     const [modalDelete, setModalDelete] = useState<ModalDeleteProps>({
         id: "",
         title: "",
@@ -73,6 +76,7 @@ export default function Employee() {
 
     const getEmployee = async (page: number) => {
         try {
+            setLoading({ active: true, for: "fetch" })
             let res;
             if (filter.active) {
                 res = await axios.get(`${API_URL}/employee?start_date=${getDateForInput(filter.startDate)}&end_date=${getDateForInput(filter.endDate)}&page=${page}`, {
@@ -91,16 +95,19 @@ export default function Employee() {
             console.log(res)
             setTotalPages(res.data.total_page)
             setData([...res.data.data])
+            setLoading({ active: false, for: "off" })
             return;
         } catch (error: any) {
             console.log("Failed get customer:", error)
             toastError({ error, message: "Failed Get customer" })
+            setLoading({ active: false, for: "off" })
             return error
         }
     }
 
     const searchByType = async ({ page, type }: { page: number, type: "member" | "name" }) => {
         try {
+            setLoading({ active: true, for: "fetch" })
             let res
             if (filter.active) {
                 res = await axios.get(`${API_URL}/employee/search?${type}=${searchValue}&start_date=${getDateForInput(filter.startDate)}&end_date=${getDateForInput(filter.endDate)}&page=${page}`, {
@@ -118,11 +125,13 @@ export default function Employee() {
 
             setTotalPages(res.data.total_page)
             setData([...res.data.data])
+            setLoading({ active: false, for: "off" })
             return;
         } catch (error) {
             console.log("Failed Search Employee:", error)
             toastError({ error, message: "Failed Search Employee" })
             setData([])
+            setLoading({ active: false, for: "off" })
             return error
         }
     }
@@ -146,20 +155,20 @@ export default function Employee() {
     }, [filter.active, triggerFilter])
 
     const deleteEmployee = async (id: string) => {
-        setLoading(true)
+        setLoading({ active: true, for: "delete" })
         try {
             const res = await axios.delete(`${API_URL}/employee/delete?id=${id}`, {
                 headers: {
                     Authorization: `bearer ${token}`
                 }
             })
-            setLoading(false)
+            setLoading({ active: false, for: "off" })
             console.log(res)
             toast.success("Succes To Delete Employee")
             setModalDelete((prev) => ({ ...prev, show: false, id: "" }))
         } catch (error) {
             console.log("Failed delete Employee:", error)
-            setLoading(false)
+            setLoading({ active: false, for: "off" })
             toast.error("Failed To Delete Employee")
             setModalDelete((prev) => ({ ...prev, show: false, id: "" }))
             return error
@@ -191,7 +200,8 @@ export default function Employee() {
         <div className="py-[2rem] px-[1rem] md:px-[4rem] flex flex-col gap-[2rem] bg-body">
 
             <ModalDelete data={modalDelete} setDelete={setModalDelete} onClick={handleDelete} />
-            <LoadingPageWithText heading={`Deleting "${modalDelete.title}"`} loading={loading} />
+            <LoadingPageWithText heading={`Deleting "${modalDelete.title}"`} loading={loading.for === "delete" ? loading.active : false} />
+            <LoadingPageWithText heading={`Loading Fetch...`} loading={loading.for === "fetch" ? loading.active : false} />
 
             {edit.value &&
                 <EditEmployee data={edit.data} setEdit={setEdit} refresh={refresh} />
@@ -221,7 +231,7 @@ export default function Employee() {
                         <button className="absolute left-[1rem] text-[1.5rem] hover:scale-125 cursor-pointer active:scale-110 duration-300 flex justify-center items-center">
                             <i className='bx bx-search' />
                         </button>
-                        <input type="text" placeholder="Search Items" className="w-full xl:w-[400px] shadow-table-black outline-none bg-white  h-[42px] px-[3rem] rounded-[.8rem] border border-white focus:border-main-gray-border hover:border-main-gray-border duration-300" onChange={(e) => {
+                        <input type="text" placeholder="Search..." className="w-full xl:w-[400px] shadow-table-black outline-none bg-white  h-[42px] px-[3rem] rounded-[.8rem] border border-white focus:border-main-gray-border hover:border-main-gray-border duration-300" onChange={(e) => {
                             setSearchValue(e.target.value);
                         }} value={searchValue} />
                         {searchValue.length > 0 &&
@@ -242,19 +252,20 @@ export default function Employee() {
                         </SelectContent>
                     </Select>
                     <div className="relative">
-                        <div className={cn("shadow-table-black outline-none bg-white flex justify-center items-center h-[42px] px-[1.5rem] rounded-[.8rem] border border-white focus:border-main-gray-border hover:border-main-gray-border duration-300 text-main-gray-text cursor-pointer",
+                        <div className={cn("shadow-table-black outline-none bg-white flex justify-center items-center gap-[.5rem] h-[42px] px-[1.5rem] rounded-[.8rem] border border-white focus:border-main-gray-border hover:border-main-gray-border duration-300 text-main-gray-text cursor-pointer",
                             filter.active && "bg-green-100 text-green-600"
                         )}
                             onClick={() => {
                                 setFilter(prev => ({ ...prev, show: true }))
                             }}
                         >
-                            Filter
+                            <i className='bx bx-filter text-[1.5rem]'></i>
+                            <p>Filter</p>
                         </div>
                         {filter.show && (
                             <form className={cn("absolute z-[10] bg-white top-[100%] left-0 shadow-default-black p-[1rem] rounded-[.5rem] flex flex-col gap-[1rem]")} onSubmit={(e) => {
                                 e.preventDefault()
-                                setFilter(prev => ({ ...prev, active: true }))
+                                setFilter(prev => ({ ...prev, active: true, show: false }))
                                 setTriggerFilter(prev => prev + 1)
                             }}>
                                 <div className="flex justify-between gap-[.5rem]">
@@ -407,7 +418,7 @@ export default function Employee() {
                                         >
                                             Delete
                                         </button>
-                                        <Link to={getDetailHref(item.id, item.first_enter)} className="bg-main-pink text-main-red py-[.8rem] px-[1rem] font-[600] rounded-[1rem] hover:bg-main-pink-hover active:bg-main-pink"
+                                        <Link to={getDetailHref(item.id, item.first_enter)} className="bg-orange-100 text-orange-600 py-[.8rem] px-[1rem] font-[600] rounded-[1rem] hover:bg-orange-200 active:bg-orange-100"
                                             onClick={() => { setModalDelete((prev) => ({ ...prev, title: item.name, show: true, id: item.id })) }}
                                         >
                                             Detail

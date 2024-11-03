@@ -65,9 +65,6 @@ export default function DetailSalaryEmployee() {
         if (!startDate || !endDate) return
         setLoading(true)
         try {
-            // const year = startDate.split("-")[0]
-            // const month = (parseInt(startDate.split("-")[1]) - 1).toString().padStart(2, "0")
-            // const day = startDate.split("-")[2].padStart(2, "0")
             const res = await axios.get(`${API_URL}/employee/detail/${id}?start_date=${startDate}&end_date=${endDate}`, {
                 headers: {
                     Authorization: `bearer ${token}`
@@ -113,11 +110,6 @@ export default function DetailSalaryEmployee() {
         getDetailTransaction()
     }, [searchParams])
 
-    // useEffect(() => {
-    //     if (filter.active) {
-    //     }
-    // }, [filter])
-
     console.log({ id, startDate, endDate, data })
 
     const handlePrint = () => {
@@ -133,7 +125,7 @@ export default function DetailSalaryEmployee() {
         document.body.innerHTML = printContents;
         window.print();
         document.body.innerHTML = originalContents;
-        window.location.reload();  // To reload the page and restore original content after printing
+        window.location.reload();
     };
 
     if (!data) return <div>loading...</div>
@@ -149,14 +141,15 @@ export default function DetailSalaryEmployee() {
                 </Link>
                 <div className="flex items-center gap-[1rem]">
                     <div className="relative">
-                        <div className={cn("shadow-table-black outline-none bg-white flex justify-center items-center h-[42px] px-[1.5rem] rounded-[.8rem] border border-white focus:border-main-gray-border hover:border-main-gray-border duration-300 text-main-gray-text cursor-pointer",
+                        <div className={cn("shadow-table-black outline-none bg-white flex justify-center items-center gap-[.5rem] h-[42px] px-[1.5rem] rounded-[.8rem] border border-white focus:border-main-gray-border hover:border-main-gray-border duration-300 text-main-gray-text cursor-pointer",
                             filter.active && "bg-green-100 text-green-600"
                         )}
                             onClick={() => {
                                 setFilter(prev => ({ ...prev, show: true }))
                             }}
                         >
-                            Filter
+                            <i className='bx bx-filter text-[1.5rem]'></i>
+                            <p>Filter Salary</p>
                         </div>
                         {filter.show && (
                             <form className={cn("absolute z-[10] bg-white top-[100%] right-0 shadow-default-black p-[1rem] rounded-[.5rem] flex flex-col gap-[1rem]")} onSubmit={(e) => {
@@ -167,7 +160,7 @@ export default function DetailSalaryEmployee() {
                                 <div className="flex justify-between gap-[.5rem]">
                                     <div className="input-poster flex flex-col gap-[.5rem]">
                                         <p>
-                                            First Date
+                                            First Month
                                         </p>
                                         <input type="month" className="px-[1rem] py-[.7rem] rounded-[.5rem] outline-none border border-main-gray-border w-full"
                                             value={filter.startDate}
@@ -181,7 +174,7 @@ export default function DetailSalaryEmployee() {
                                     <div className="w-[10px] h-[2px] bg-black my-auto mt-[3.2rem]" />
                                     <div className="input-poster flex flex-col gap-[.5rem]">
                                         <p>
-                                            End Date
+                                            End Month
                                         </p>
                                         <input type="month" className="px-[1rem] py-[.7rem] rounded-[.5rem] outline-none border border-main-gray-border w-full"
                                             value={filter.endDate}

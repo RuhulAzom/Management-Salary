@@ -16,12 +16,12 @@ export default function Sidebar({ setShowSidebar }: { setShowSidebar: React.Disp
                 <ArrowLeft />
             </div>
             <div className="w-full flex flex-col justify-center gap-[.5rem] items-center">
-                <div className="w-full">
+                <div className="w-full mt-[2rem]">
                     <img src={logo} alt="" />
                 </div>
-                <p className="font-[700] text-[1.5rem] sansitaReal text-main-gray-text mb-[-1.8rem] text-center leading-6 mt-[1rem]">
+                {/* <p className="font-[700] text-[1.5rem] sansitaReal text-main-gray-text mb-[-1.8rem] text-center leading-6 mt-[1rem]">
                     <span className="text-[2rem]">Mediatama Web </span> <br /> <span className="text-[1rem]">Best Software House</span>
-                </p>
+                </p> */}
             </div>
             <div className="flex flex-col gap-[.5rem]">
                 <Link to={"/"} className={`flex items-center gap-[1rem] py-[.8rem] px-[1rem] rounded-[.8rem] ${pathname === "/" ? "bg-main-purple text-main" : "text-main-gray-text hover:bg-main-hover hover:text-white duration-300 active:bg-main"}`}

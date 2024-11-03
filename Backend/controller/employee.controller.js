@@ -1,78 +1,4 @@
-
-
 const { prisma, firstSalary, secondSalary, normalSalary, overtimeSalary, memberSalary } = require("../utils");
-
-
-// /**
-// @param {import("express").Request} req
-// @param {import("express").Response} res
-// */
-// exports.GetEmployee = async (req, res) => {
-//     try {
-//         const page = req.query.page || 1;
-//         const take = 10;
-//         const skip = (page * take) - 10;
-
-//         let data = await prisma.employee.findMany({
-//             take,
-//             skip,
-//             include: {
-//                 Attendance_Data: true
-//             }
-//         })
-
-//         if (data.length > 0) {
-//             data = data.map((employee) => {
-//                 const overtime = employee.Attendance_Data.filter(item => item.type === "OVERTIME").length;
-//                 const permit = employee.Attendance_Data.filter(item => item.type === "PERMIT").length;
-//                 const startDate = new Date(employee.first_enter);
-//                 const currentDate = new Date();
-//                 const differenceInMilliseconds = currentDate.getTime() - startDate.getTime();
-//                 const differenceInDays = Math.floor(differenceInMilliseconds / (1000 * 60 * 60 * 24));
-//                 const attendance = differenceInDays - (permit) < 0 ? 0 : differenceInDays - (permit)
-//                 let pay_day_count = 0;
-//                 const first = new Date(employee.first_enter)
-//                 const now = new Date()
-//                 const dueDate = first.getDate()
-//                 while (first <= now) {
-//                     if (first.getDate() === dueDate) pay_day_count++
-//                     first.setMonth(first.getMonth() + 1)
-//                 }
-//                 return {
-//                     ...employee,
-//                     id: employee.id,
-//                     name: employee.name,
-//                     first_enter: employee.first_enter,
-//                     member: employee.member,
-//                     createdAt: employee.createdAt,
-//                     updatedAt: employee.updatedAt,
-//                     attendance,
-//                     overtime,
-//                     permit,
-//                     pay_day_count,
-//                 }
-//             })
-//         }
-
-//         const total_employee = await prisma.employee.count()
-
-//         const total_page = Math.ceil(total_employee / take)
-
-//         return res.status(200).json({
-//             status: 200,
-//             message: "Succesfully Get Employee",
-//             data,
-//             current_page: page,
-//             total_page,
-//         })
-//     } catch (error) {
-//         console.log("Error in GetEmployee : ", error)
-//         return res.status(500).json({
-//             status: 500,
-//             message: "Internal Server Error"
-//         })
-//     }
-// }
 
 /**
 @param {import("express").Request} req
@@ -100,148 +26,6 @@ exports.GetEmployee = async (req, res) => {
 
 
         if (data.length > 0) {
-            // data = data.map((employee) => {
-            //     let startDate;
-            //     let endDate;
-            //     let overtime;
-            //     let permit;
-
-            //     if (start_date && end_date) {
-            //         startDate = new Date(start_date)
-            //         endDate = new Date(end_date)
-
-            //         overtime = employee.Attendance_Data
-            //             .filter(item => {
-            //                 const attendanceDate = new Date(item.date)
-            //                 if (item.type === "OVERTIME" && attendanceDate >= startDate && attendanceDate <= endDate) return true
-            //                 return false
-            //             }).length;
-
-            //         permit = employee.Attendance_Data
-            //             .filter(item => {
-            //                 const attendanceDate = new Date(item.date)
-            //                 if (item.type === "PERMIT" && attendanceDate >= startDate && attendanceDate <= endDate) return true
-            //                 return false
-            //             }).length;
-
-            //     } else {
-            //         startDate = new Date(employee.first_enter);
-            //         endDate = new Date();
-
-            //         overtime = employee.Attendance_Data
-            //             .filter(item => item.type === "OVERTIME").length;
-            //         permit = employee.Attendance_Data
-            //             .filter(item => item.type === "PERMIT").length;
-            //     }
-
-            //     const firstEnter = new Date(employee.first_enter)
-            //     const dueDate = firstEnter.getDate()
-            //     const first = start_date && end_date && startDate > firstEnter ? new Date(start_date) : firstEnter
-            //     first.setDate(dueDate)
-            //     const now = start_date && end_date ? new Date(end_date) : new Date()
-
-            //     // Attendance
-            //     const differenceInMilliseconds = start_date && end_date && startDate > firstEnter ? endDate.getTime() - first.getTime() : endDate.getTime() - firstEnter.getTime();
-            //     const differenceInDays = Math.floor(differenceInMilliseconds / (1000 * 60 * 60 * 24));
-            //     const attendance = differenceInDays - permit < 0 ? 0 : differenceInDays - permit
-
-
-            //     // Check Total Count Sejak Awal
-            //     let firstAndSecond = 0;
-            //     const check = 2;
-            //     const dateWhenSalaryNormal = new Date(firstEnter.toISOString().split("T")[0]);
-            //     while (firstAndSecond <= check) {
-            //         if (dateWhenSalaryNormal.getDate() === dueDate) firstAndSecond++
-            //         dateWhenSalaryNormal.setMonth(dateWhenSalaryNormal.getMonth() + 1)
-            //     }
-            //     const dateSalarySecond = new Date(dateWhenSalaryNormal.toISOString().split("T")[0])
-            //     dateSalarySecond.setMonth(dateSalarySecond.getMonth() - 1)
-            //     const dateSalaryFirst = new Date(dateWhenSalaryNormal.toISOString().split("T")[0])
-            //     dateSalaryFirst.setMonth(dateSalaryFirst.getMonth() - 2)
-
-
-            //     // Pay Day Count
-            //     let pay_day_data = [];
-            //     first.setMonth(first.getMonth() + 1)
-            //     let payDayIndex = 0
-            //     while (first <= now) {
-            //         if (first.getDate() === dueDate) {
-            //             const nextMonth = new Date(first.toISOString().split("T")[0]);
-            //             nextMonth.setMonth(nextMonth.getMonth() + 1)
-
-            //             // Total Days
-            //             const differenceInMilliseconds = nextMonth.getTime() - first.getTime();
-            //             const differenceInDays = Math.floor(differenceInMilliseconds / (1000 * 60 * 60 * 24));
-
-            //             // Permit In This Month
-            //             const permitData = employee.Attendance_Data
-            //                 .filter(item => {
-            //                     const attendanceDate = new Date(item.date)
-            //                     if (item.type === "PERMIT" && attendanceDate >= first && attendanceDate <= nextMonth) return true
-            //                     return false
-            //                 }).length;
-
-            //             // Overtime In This Month
-            //             const overtimeData = employee.Attendance_Data
-            //                 .filter(item => {
-            //                     const attendanceDate = new Date(item.date)
-            //                     if (item.type === "OVERTIME" && attendanceDate >= first && attendanceDate <= nextMonth) return true
-            //                     return false
-            //                 }).length;
-
-            //             let salary = 0;
-            //             if (start_date && end_date) {
-            //                 if (startDate < dateWhenSalaryNormal) {
-            //                     if (first <= dateSalaryFirst) salary = firstSalary
-            //                     else if (first <= dateSalarySecond) salary = secondSalary
-            //                     else salary = normalSalary
-            //                 } else {
-            //                     salary = normalSalary
-            //                 }
-            //             } else {
-            //                 if (payDayIndex === 0) salary = firstSalary
-            //                 else if (payDayIndex === 1) salary = secondSalary
-            //                 else salary = normalSalary
-            //             }
-            //             console.log({ payDayIndex, salary })
-
-            //             pay_day_data.push({
-            //                 year: first.getFullYear(),
-            //                 month: first.getMonth() + 1,
-            //                 attendance: differenceInDays - permitData,
-            //                 permit: permitData,
-            //                 overtime: overtimeData,
-            //                 salary
-
-            //             })
-            //         }
-
-            //         first.setMonth(first.getMonth() + 1)
-            //         payDayIndex++
-            //     }
-
-            //     // Salary
-            //     let total_salary = 0
-            //     let overtime_salary = overtimeSalary * overtime;
-            //     pay_day_data.forEach((item, index) => {
-            //         total_salary += (item.attendance * item.salary)
-            //     })
-            //     return {
-            //         ...employee,
-            //         id: employee.id,
-            //         name: employee.name,
-            //         first_enter: employee.first_enter,
-            //         member: employee.member,
-            //         createdAt: employee.createdAt,
-            //         updatedAt: employee.updatedAt,
-            //         attendance,
-            //         overtime,
-            //         permit,
-            //         pay_day_data,
-            //         total_salary: total_salary + overtime_salary + (employee.member * memberSalary)
-            //     }
-            // })
-
             data = getDetailEmployeeDataArray({ data, start_date, end_date })
         }
 
@@ -264,6 +48,8 @@ exports.GetEmployee = async (req, res) => {
         })
     }
 }
+
+
 /**
 @param {import("express").Request} req
 @param {import("express").Response} res
@@ -480,228 +266,12 @@ exports.GetEmployeeById = async (req, res) => {
         })
     }
 }
-// /**
-// @param {import("express").Request} req
-// @param {import("express").Response} res
-// */
-// exports.GetEmployeeById = async (req, res) => {
-//     try {
-//         const { id } = req.params
-//         const start_date = req.query.start_date
-//         const end_date = req.query.end_date
-//         // const start_date = "2024-06-01"
-//         // const end_date = "2024-11-01"
-//         console.log({ start_date, end_date, id })
-//         let data;
 
-//         data = await prisma.employee.findFirst({
-//             where: { id },
-//             include: {
-//                 Attendance_Data: true
-//             }
-//         })
-
-//         if (!data) return res.status(404).json({
-//             status: 404,
-//             message: "Employe Not Found!!"
-//         })
-
-//         let startDate;
-//         let endDate;
-//         let overtime;
-//         let permit;
-
-//         if (start_date && end_date) {
-//             startDate = new Date(start_date)
-//             endDate = new Date(end_date)
-
-//             data = await prisma.employee.findFirst({
-//                 where: { id },
-//                 include: {
-//                     Attendance_Data: {
-//                         where: {
-//                             AND: [
-//                                 { date: { gte: startDate } },
-//                                 { date: { lte: endDate } }
-//                             ]
-//                         },
-//                         orderBy: {
-//                             date: "desc"
-//                         }
-//                     }
-//                 }
-//             })
-
-//             overtime = data.Attendance_Data
-//                 .filter(item => {
-//                     const attendanceDate = new Date(item.date)
-//                     if (item.type === "OVERTIME" && attendanceDate >= startDate && attendanceDate <= endDate) return true
-//                     return false
-//                 }).map((item) => item.date);
-
-//             permit = data.Attendance_Data
-//                 .filter(item => {
-//                     const attendanceDate = new Date(item.date)
-//                     if (item.type === "PERMIT" && attendanceDate >= startDate && attendanceDate <= endDate) return true
-//                     return false
-//                 }).map((item) => item.date);
-
-//         } else {
-//             startDate = new Date(data.first_enter);
-//             endDate = new Date();
-
-//             overtime = data.Attendance_Data
-//                 .filter(item => item.type === "OVERTIME").map((item) => item.date);
-//             permit = data.Attendance_Data
-//                 .filter(item => item.type === "PERMIT").map((item) => item.date);
-//         }
-
-
-//         const firstEnter = new Date(data.first_enter)
-//         const dueDate = firstEnter.getDate()
-//         const first = start_date && end_date && startDate > firstEnter ? new Date(start_date) : firstEnter
-//         first.setDate(dueDate)
-//         const now = start_date && end_date ? new Date(end_date) : new Date()
-
-//         // Attendance
-//         const differenceInMilliseconds = start_date && end_date && startDate > firstEnter ? endDate.getTime() - first.getTime() : endDate.getTime() - firstEnter.getTime();
-//         const differenceInDays = Math.floor(differenceInMilliseconds / (1000 * 60 * 60 * 24));
-//         const attendance = differenceInDays - permit < 0 ? 0 : differenceInDays - permit.length
-
-
-//         // Check Total Count Sejak Awal
-//         let firstAndSecondSalary = 0;
-//         const check = 2;
-//         const fromBeginingDateEnter = new Date(firstEnter.toISOString().split("T")[0]);
-//         const fromBeginingDateNow = new Date()
-//         fromBeginingDateEnter.setMonth(fromBeginingDateEnter.getMonth() + 1)
-//         while (fromBeginingDateEnter <= fromBeginingDateNow && firstAndSecondSalary <= check) {
-//             if (fromBeginingDateEnter.getDate() === dueDate) firstAndSecondSalary++
-//             fromBeginingDateEnter.setMonth(fromBeginingDateEnter.getMonth() + 1)
-//         }
-
-//         // Pay Day Count
-//         let pay_day_data = [];
-//         first.setMonth(first.getMonth() + 1)
-//         let payDayIndex = 0
-//         while (first <= now) {
-//             if (first.getDate() === dueDate) {
-//                 const nextMonth = new Date(first.toISOString().split("T")[0]);
-//                 nextMonth.setMonth(nextMonth.getMonth() + 1)
-
-//                 // Total Days
-//                 const differenceInMilliseconds = nextMonth.getTime() - first.getTime();
-//                 const differenceInDays = Math.floor(differenceInMilliseconds / (1000 * 60 * 60 * 24));
-
-//                 // Permit In This Month
-//                 const permitData = data.Attendance_Data
-//                     .filter(item => {
-//                         const attendanceDate = new Date(item.date)
-//                         if (item.type === "PERMIT" && attendanceDate >= first && attendanceDate <= nextMonth) return true
-//                         return false
-//                     }).length;
-
-//                 // Overtime In This Month
-//                 const overtimeData = data.Attendance_Data
-//                     .filter(item => {
-//                         const attendanceDate = new Date(item.date)
-//                         if (item.type === "OVERTIME" && attendanceDate >= first && attendanceDate <= nextMonth) return true
-//                         return false
-//                     }).length;
-
-//                 let salary = 0;
-//                 if (start_date && end_date) {
-//                     if (firstAndSecondSalary === 0 || firstAndSecondSalary === 1) {
-//                         if (payDayIndex === 0) salary = firstSalary
-//                         else if (payDayIndex === 1) salary = secondSalary
-//                         else salary = normalSalary
-
-//                     }
-//                     else if (firstAndSecondSalary === 2) {
-//                         if (payDayIndex === 0) salary = secondSalary
-//                         else salary = normalSalary
-//                     } else {
-//                         salary = normalSalary
-//                     }
-//                 } else {
-//                     if (payDayIndex === 0) salary = firstSalary
-//                     else if (payDayIndex === 1) salary = secondSalary
-//                     else salary = normalSalary
-//                 }
-
-//                 pay_day_data.push({
-//                     year: first.getFullYear(),
-//                     month: first.getMonth() + 1,
-//                     attendance: differenceInDays - permitData,
-//                     permit_data: permitData,
-//                     overtime_data: overtimeData,
-//                     salary
-//                 })
-//             }
-//             first.setMonth(first.getMonth() + 1)
-//             payDayIndex++
-//         }
-
-
-//         // Salary
-//         let total_salary = 0
-//         let overtime_salary = overtimeSalary * overtime.length;
-//         pay_day_data.forEach((item, index) => {
-//             if (start_date && end_date) {
-//                 if (firstAndSecondSalary === 0 || firstAndSecondSalary === 1) {
-//                     if (index === 0) total_salary += (firstSalary * item.attendance);
-//                     else if (index === 1) total_salary += (secondSalary * item.attendance);
-//                     else total_salary += (normalSalary * item.attendance)
-//                 }
-//                 else if (firstAndSecondSalary === 2) {
-//                     if (index === 0) total_salary += (secondSalary * item.attendance);
-//                     else total_salary += (normalSalary * item.attendance);
-//                 } else {
-//                     total_salary += (normalSalary * item.attendance)
-//                 }
-//             } else {
-//                 if (index === 0) total_salary += (firstSalary * item.attendance);
-//                 else if (index === 1) total_salary += (secondSalary * item.attendance);
-//                 else total_salary += (normalSalary * item.attendance)
-//             }
-//         })
-//         const sendData = {
-//             id: data.id,
-//             name: data.name,
-//             first_enter: data.first_enter,
-//             member: data.member,
-//             createdAt: data.createdAt,
-//             updatedAt: data.updatedAt,
-//             attendance,
-//             permit: permit.length,
-//             permit_data: permit,
-//             overtime: overtime.length,
-//             overtime_data: overtime,
-//             overtime_salary,
-//             pay_day_data,
-//             total_salary,
-//             first_second_salary: firstAndSecondSalary
-//         }
-
-//         return res.status(200).json({
-//             status: 200,
-//             message: "Succesfully Get Employee",
-//             data: sendData,
-//         })
-//     } catch (error) {
-//         console.log("Error in GetEmployee : ", error)
-//         return res.status(500).json({
-//             status: 500,
-//             message: "Internal Server Error"
-//         })
-//     }
-// }
 
 /**
 @param {import("express").Request} req
 @param {import("express").Response} res
 */
-
 exports.AddEmployee = async (req, res) => {
     try {
         const { name, member, first_enter } = req.body;
@@ -730,11 +300,11 @@ exports.AddEmployee = async (req, res) => {
     }
 }
 
+
 /**
 @param {import("express").Request} req
 @param {import("express").Response} res
 */
-
 exports.EditEmployee = async (req, res) => {
     try {
         const { id, name, member, first_enter } = req.body;
@@ -764,11 +334,11 @@ exports.EditEmployee = async (req, res) => {
     }
 }
 
+
 /**
 @param {import("express").Request} req
 @param {import("express").Response} res
 */
-
 exports.DeleteEmployee = async (req, res) => {
     try {
         const { id } = req.query;
@@ -806,7 +376,6 @@ exports.DeleteEmployee = async (req, res) => {
 @param {import("express").Request} req
 @param {import("express").Response} res
 */
-
 exports.GetSearchEmployee = async (req, res) => {
     try {
         const page = req.query.page;
@@ -856,148 +425,6 @@ exports.GetSearchEmployee = async (req, res) => {
             }
             if (data.length > 0) {
                 const total_page = Math.ceil(total_employee / take)
-                // data = data.map((employee) => {
-                //     let startDate;
-                //     let endDate;
-                //     let overtime;
-                //     let permit;
-
-                //     if (start_date && end_date) {
-                //         startDate = new Date(start_date)
-                //         endDate = new Date(end_date)
-
-                //         overtime = employee.Attendance_Data
-                //             .filter(item => {
-                //                 const attendanceDate = new Date(item.date)
-                //                 if (item.type === "OVERTIME" && attendanceDate >= startDate && attendanceDate <= endDate) return true
-                //                 return false
-                //             }).length;
-
-                //         permit = employee.Attendance_Data
-                //             .filter(item => {
-                //                 const attendanceDate = new Date(item.date)
-                //                 if (item.type === "PERMIT" && attendanceDate >= startDate && attendanceDate <= endDate) return true
-                //                 return false
-                //             }).length;
-
-                //     } else {
-                //         startDate = new Date(employee.first_enter);
-                //         endDate = new Date();
-
-                //         overtime = employee.Attendance_Data
-                //             .filter(item => item.type === "OVERTIME").length;
-                //         permit = employee.Attendance_Data
-                //             .filter(item => item.type === "PERMIT").length;
-                //     }
-
-                //     const firstEnter = new Date(employee.first_enter)
-                //     const dueDate = firstEnter.getDate()
-                //     const first = start_date && end_date && startDate > firstEnter ? new Date(start_date) : firstEnter
-                //     first.setDate(dueDate)
-                //     const now = start_date && end_date ? new Date(end_date) : new Date()
-
-                //     // Attendance
-                //     const differenceInMilliseconds = start_date && end_date && startDate > firstEnter ? endDate.getTime() - first.getTime() : endDate.getTime() - firstEnter.getTime();
-                //     const differenceInDays = Math.floor(differenceInMilliseconds / (1000 * 60 * 60 * 24));
-                //     const attendance = differenceInDays - permit < 0 ? 0 : differenceInDays - permit
-
-
-                //     // Check Total Count Sejak Awal
-                //     let firstAndSecond = 0;
-                //     const check = 2;
-                //     const dateWhenSalaryNormal = new Date(firstEnter.toISOString().split("T")[0]);
-                //     while (firstAndSecond <= check) {
-                //         if (dateWhenSalaryNormal.getDate() === dueDate) firstAndSecond++
-                //         dateWhenSalaryNormal.setMonth(dateWhenSalaryNormal.getMonth() + 1)
-                //     }
-                //     const dateSalarySecond = new Date(dateWhenSalaryNormal.toISOString().split("T")[0])
-                //     dateSalarySecond.setMonth(dateSalarySecond.getMonth() - 1)
-                //     const dateSalaryFirst = new Date(dateWhenSalaryNormal.toISOString().split("T")[0])
-                //     dateSalaryFirst.setMonth(dateSalaryFirst.getMonth() - 2)
-
-
-                //     // Pay Day Count
-                //     let pay_day_data = [];
-                //     first.setMonth(first.getMonth() + 1)
-                //     let payDayIndex = 0
-                //     while (first <= now) {
-                //         if (first.getDate() === dueDate) {
-                //             const nextMonth = new Date(first.toISOString().split("T")[0]);
-                //             nextMonth.setMonth(nextMonth.getMonth() + 1)
-
-                //             // Total Days
-                //             const differenceInMilliseconds = nextMonth.getTime() - first.getTime();
-                //             const differenceInDays = Math.floor(differenceInMilliseconds / (1000 * 60 * 60 * 24));
-
-                //             // Permit In This Month
-                //             const permitData = employee.Attendance_Data
-                //                 .filter(item => {
-                //                     const attendanceDate = new Date(item.date)
-                //                     if (item.type === "PERMIT" && attendanceDate >= first && attendanceDate <= nextMonth) return true
-                //                     return false
-                //                 }).length;
-
-                //             // Overtime In This Month
-                //             const overtimeData = employee.Attendance_Data
-                //                 .filter(item => {
-                //                     const attendanceDate = new Date(item.date)
-                //                     if (item.type === "OVERTIME" && attendanceDate >= first && attendanceDate <= nextMonth) return true
-                //                     return false
-                //                 }).length;
-
-                //             let salary = 0;
-                //             if (start_date && end_date) {
-                //                 if (startDate < dateWhenSalaryNormal) {
-                //                     if (first <= dateSalaryFirst) salary = firstSalary
-                //                     else if (first <= dateSalarySecond) salary = secondSalary
-                //                     else salary = normalSalary
-                //                 } else {
-                //                     salary = normalSalary
-                //                 }
-                //             } else {
-                //                 if (payDayIndex === 0) salary = firstSalary
-                //                 else if (payDayIndex === 1) salary = secondSalary
-                //                 else salary = normalSalary
-                //             }
-                //             console.log({ payDayIndex, salary })
-
-                //             pay_day_data.push({
-                //                 year: first.getFullYear(),
-                //                 month: first.getMonth() + 1,
-                //                 attendance: differenceInDays - permitData,
-                //                 permit: permitData,
-                //                 overtime: overtimeData,
-                //                 salary
-
-                //             })
-                //         }
-
-                //         first.setMonth(first.getMonth() + 1)
-                //         payDayIndex++
-                //     }
-
-                //     // Salary
-                //     let total_salary = 0
-                //     let overtime_salary = overtimeSalary * overtime;
-                //     pay_day_data.forEach((item, index) => {
-                //         total_salary += (item.attendance * item.salary)
-                //     })
-                //     return {
-                //         ...employee,
-                //         id: employee.id,
-                //         name: employee.name,
-                //         first_enter: employee.first_enter,
-                //         member: employee.member,
-                //         createdAt: employee.createdAt,
-                //         updatedAt: employee.updatedAt,
-                //         attendance,
-                //         overtime,
-                //         permit,
-                //         pay_day_data,
-                //         total_salary: total_salary + overtime_salary + (employee.member * memberSalary)
-                //     }
-                // })
-
                 data = getDetailEmployeeDataArray({ data, start_date, end_date })
 
                 return res.status(200).json({
@@ -1121,11 +548,11 @@ const getDetailEmployeeDataArray = ({ data, start_date, end_date }) => {
                 const nextMonth = new Date(first.toISOString().split("T")[0]);
                 nextMonth.setMonth(nextMonth.getMonth() + 1)
 
-                // Total Days
+                // Total Hari
                 const differenceInMilliseconds = nextMonth.getTime() - first.getTime();
                 const differenceInDays = Math.floor(differenceInMilliseconds / (1000 * 60 * 60 * 24));
 
-                // Permit In This Month
+                // Permit bulan ini
                 const permitData = employee.Attendance_Data
                     .filter(item => {
                         const attendanceDate = new Date(item.date)
@@ -1133,7 +560,7 @@ const getDetailEmployeeDataArray = ({ data, start_date, end_date }) => {
                         return false
                     }).length;
 
-                // Overtime In This Month
+                // Overtime bulan ini
                 const overtimeData = employee.Attendance_Data
                     .filter(item => {
                         const attendanceDate = new Date(item.date)
@@ -1285,11 +712,11 @@ const getDetailEmployeeDataObject = async ({ object, start_date, end_date, id })
             const nextMonth = new Date(first.toISOString().split("T")[0]);
             nextMonth.setMonth(nextMonth.getMonth() + 1)
 
-            // Total Days
+            // Total Hari
             const differenceInMilliseconds = nextMonth.getTime() - first.getTime();
             const differenceInDays = Math.floor(differenceInMilliseconds / (1000 * 60 * 60 * 24));
 
-            // Permit In This Month
+            // Permit bulan ini
             const permitData = data.Attendance_Data
                 .filter(item => {
                     const prevMonth = new Date(first.toISOString().split("T")[0]);
@@ -1299,7 +726,7 @@ const getDetailEmployeeDataObject = async ({ object, start_date, end_date, id })
                     return false
                 }).map(item => item.date);
 
-            // Overtime In This Month
+            // Overtime bulan ini
             const overtimeData = data.Attendance_Data
                 .filter(item => {
                     const prevMonth = new Date(first.toISOString().split("T")[0]);

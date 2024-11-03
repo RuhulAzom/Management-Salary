@@ -1,6 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
+import { cn, toastError } from "@/lib/utils";
 import { useState } from "react";
 import { Loader2 } from "lucide-react"
 import axios from "axios";
@@ -32,6 +32,7 @@ const LoginPage = () => {
 
         } catch (error) {
             console.log("Error in handleLogin : ", error)
+            toastError({ error, message: "Login Failed, Try again!" })
             return
         }
     }
