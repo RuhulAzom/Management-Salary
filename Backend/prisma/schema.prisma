@@ -39,6 +39,25 @@ model Employee {
   updatedAt DateTime @updatedAt
 
   Attendance_Data Attendance_Data[]
+  Employee_Salary Employee_Salary[]
+}
+
+model Employee_Salary {
+  id              String   @id @default(uuid())
+  employee_id     String
+  start_date      DateTime
+  end_date        DateTime
+  member          Int
+  attendance      Int
+  permit          Int
+  permit_data     String
+  overtime        Int
+  overtime_data   String
+  overtime_salary Int
+  total_salary    Int
+  salary_per_day  Int      @default(60000)
+
+  Employee Employee @relation(fields: [employee_id], references: [id], onDelete: Cascade)
 }
 
 model Attendance_Data {
@@ -51,6 +70,14 @@ model Attendance_Data {
   updatedAt DateTime @updatedAt
 
   Employee Employee @relation(fields: [employee_id], references: [id], onDelete: Cascade)
+}
+
+model Branch {
+  id     String @id @default(uuid())
+  branch String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum Attendance_Type {
