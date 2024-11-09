@@ -11,7 +11,7 @@ import EditEmployee from "./edit-employee";
 
 export interface EmployeeProps {
     id: string,
-    member: number,
+    // member: number,
     name: string,
     first_enter: string,
     attendance: number,
@@ -386,7 +386,7 @@ export default function Employee() {
                                     {item.name}
                                 </td>
                                 <td className={`select-text text-center bg-white p-[1rem] md:text-[.9rem] font-[400] text-main-gray-text`}>
-                                    {item.member}
+                                    {/* {item.member} */}
                                 </td>
                                 <td className={`select-text text-center bg-white p-[1rem] md:text-[.9rem] font-[400] text-main-gray-text`}>
                                     {getDateString(item.first_enter)}

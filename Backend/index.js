@@ -10,10 +10,12 @@ app.use(express.json())
 const { AuthRouter } = require("./routes/auth.route")
 const { EmployeeRouter } = require("./routes/employee.route")
 const { AttendanceRouter } = require("./routes/attendance.route")
+const { BranchRouter } = require("./routes/branch.route")
 
 app.use("/auth", AuthRouter)
 app.use("/employee", EmployeeRouter)
 app.use("/attendance", AttendanceRouter)
+app.use("/branch", BranchRouter)
 
 
 app.listen(port, () => {

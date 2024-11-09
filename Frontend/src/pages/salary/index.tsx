@@ -658,7 +658,7 @@ export default function Salary() {
                             </div>
                             <div className="border-t border-main-gray-border p-[1rem] text-[1.2rem] font-[500] flex justify-between">
                                 <p className="sansita text-main-gray-text">Best Market - Nazea Mart</p>
-                                <p className="sansita text-main-gray-text">Jl. Dr. Sutomo No.151 B</p>
+                                <p className="sansita text-main-gray-text">Jl. Marapalam Indah No. 08, Kubu Marapalam</p>
                             </div>
                         </div>
                     </div>

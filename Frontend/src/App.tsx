@@ -6,13 +6,20 @@ import { createContext, useEffect, useState } from 'react'
 import axios from 'axios'
 import { API_URL } from './env'
 import Layout from './components/Layout'
-import Employee from './pages/employee-backup'
-import AddEmploye from './pages/employee-backup/add-employee'
-import Attendance from './pages/attendace'
+import EmployeeBackup from './pages/employee-backup'
+import AddEmployeeBackup from './pages/employee-backup/add-employee'
 import DetailSalaryEmployee from './pages/employee-backup/detail-salary-employee'
-import Employee2 from './pages/employee'
-import Salary from './pages/salary'
+import Employee from './pages/employee'
+import AddEmployee from './pages/employee/add-employee'
 import DetailEmployee from './pages/employee/detail-employee'
+import Branch from './pages/branch'
+// import Employee from './pages/employee-backup'
+// import AddEmploye from './pages/employee-backup/add-employee'
+// import Attendance from './pages/attendace'
+// import DetailSalaryEmployee from './pages/employee-backup/detail-salary-employee'
+// import Employee2 from './pages/employee'
+// import Salary from './pages/salary'
+// import DetailEmployee from './pages/employee/detail-employee'
 
 interface UserProps {
   username: string,
@@ -66,14 +73,15 @@ function App() {
         <Layout>
           <Routes>
             <Route index element={<Dashboard />} />
-            <Route path='/employee-backup' element={<Employee />} />
-            <Route path='/employee-backup/add' element={<AddEmploye />} />
+            <Route path='/employee-backup' element={<EmployeeBackup />} />
+            <Route path='/employee-backup/add' element={<AddEmployeeBackup />} />
             <Route path='/employee-backup/detail/:id' element={<DetailSalaryEmployee />} />
-            <Route path='/employee' element={<Employee2 />} />
-            <Route path='/employee/add' element={<AddEmploye />} />
+            <Route path='/employee' element={<Employee />} />
+            <Route path='/employee/add' element={<AddEmployee />} />
             <Route path='/employee/detail' element={<DetailEmployee />} />
-            <Route path='/attendance' element={<Attendance />} />
-            <Route path='/salary' element={<Salary />} />
+            <Route path='/branch' element={<Branch />} />
+            {/* <Route path='/attendance' element={<Attendance />} />
+            <Route path='/salary' element={<Salary />} /> */}
             {!userData && (
               <>
                 <Route path='/auth/login' element={<LoginPage />} />

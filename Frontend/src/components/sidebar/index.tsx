@@ -37,7 +37,15 @@ export default function Sidebar({ setShowSidebar }: { setShowSidebar: React.Disp
                 >
                     <i className='bx bx-transfer-alt text-[1.5rem]' />
                     <p>
-                        Employee
+                        Karyawan
+                    </p>
+                </Link>
+                <Link to={"/branch"} className={`flex items-center gap-[1rem] py-[.8rem] px-[1rem] rounded-[.8rem] ${pathname.includes("/branch") ? "bg-main-purple text-main" : "text-main-gray-text hover:bg-main-hover hover:text-white duration-300 active:bg-main"}`}
+                    onClick={() => { setShowSidebar(false) }}
+                >
+                    <i className='bx bx-transfer-alt text-[1.5rem]' />
+                    <p>
+                        Cabang
                     </p>
                 </Link>
                 {/* <Link to={"/employee-backup"} className={`flex items-center gap-[1rem] py-[.8rem] px-[1rem] rounded-[.8rem] ${pathname.includes("/employee-backup") ? "bg-main-purple text-main" : "text-main-gray-text hover:bg-main-hover hover:text-white duration-300 active:bg-main"}`}

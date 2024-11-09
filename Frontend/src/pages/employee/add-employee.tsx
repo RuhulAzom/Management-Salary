@@ -1,5 +1,5 @@
 import axios from "axios"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import toast from "react-hot-toast"
 import { API_URL } from "@/env"
@@ -7,25 +7,35 @@ import { toastError, token } from "@/lib/utils"
 import InputText from "@/components/_sub-components/input-text"
 import InputNumber from "@/components/_sub-components/input-number"
 import LoadingPageWithText from "@/components/loading/loading-page"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 interface InputDataProps {
     name: string;
-    member: string;
+    branchId: string;
     firstEnter: string;
     loading: boolean;
 }
 
-export default function AddEmploye() {
+interface BranchProps {
+    id: string;
+    branch: string;
+
+    createdAt: string;
+    updatedAt: string;
+}
+
+export default function AddEmployee() {
 
     // const [name, setName] = useState<string>("")
     // const [member, setMember] = useState<string>("")
     // const [firtEnter, setFirstEnter] = useState<string>("")
 
     // const [loading, setLoading] = useState<boolean>(false)
+    const [branchData, setBranchData] = useState<BranchProps[]>([])
 
     const [inputData, setInputData] = useState<InputDataProps>({
         name: "",
-        member: "",
+        branchId: "",
         firstEnter: "",
         loading: false
     })
@@ -34,7 +44,8 @@ export default function AddEmploye() {
         setInputData(prev => ({ ...prev, loading: true }))
         try {
             const res = await axios.post(`${API_URL}/employee/add`, {
-                name: inputData.name, member: parseInt(inputData.member), first_enter: inputData.firstEnter
+                name: inputData.name, first_enter: inputData.firstEnter,
+                branch_id: inputData.branchId
             }, {
                 headers: {
                     Authorization: `bearer ${token}`
@@ -44,7 +55,7 @@ export default function AddEmploye() {
             toast.success(`Succes To Add ${inputData.name} as Employee`, { duration: 3000 })
             setInputData({
                 name: "",
-                member: "",
+                branchId: "",
                 firstEnter: "",
                 loading: false
             })
@@ -55,6 +66,27 @@ export default function AddEmploye() {
             return error;
         }
     }
+
+    const GetBranch = async () => {
+        try {
+            const res = await axios.get(`${API_URL}/branch`, {
+                headers: {
+                    Authorization: `bearer ${token}`
+                }
+            })
+            console.log(res)
+            setBranchData([...res.data.data])
+            return;
+        } catch (error: any) {
+            console.log("Failed get branch:", error)
+            toastError({ error, message: "Failed Get branch" })
+            return error
+        }
+    }
+
+    useEffect(() => {
+        GetBranch()
+    }, [])
 
     return (
         <div className="px-[1rem] md:px-[4rem] py-[2rem] bg-body">
@@ -80,8 +112,8 @@ export default function AddEmploye() {
                 >
                     <div>
                         <InputText
-                            heading="Name"
-                            placeholder="Input Name..."
+                            heading="Nama Karyawan"
+                            placeholder="Input Nama Karyawan..."
                             value={inputData.name}
                             required
                             onChange={(e) => {
@@ -89,21 +121,32 @@ export default function AddEmploye() {
                             }}
                         />
                     </div>
-                    <div>
-                        <InputNumber
-                            heading="Member"
-                            placeholder="Input Member..."
-                            value={inputData.member}
-                            required
-                            onChange={(e) => {
-                                setInputData(prev => ({ ...prev, member: e.target.value }))
-                            }}
-                        />
+                    <div className="flex flex-col gap-[.5rem]">
+                        <p>
+                            Cabang
+                        </p>
+                        <Select required onValueChange={(value) => {
+                            if (value) setInputData(prev => ({ ...prev, branchId: value }))
+                        }}>
+                            <SelectTrigger className="px-[1rem] py-[.7rem] rounded-[.5rem] outline-none border border-main-gray-border w-full min-h-[40px] focus:ring-0 focus:ring-offset-0">
+                                <SelectValue placeholder="Cabang" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="placeholder" disabled>
+                                    Cabang
+                                </SelectItem>
+                                {branchData?.map((item, index) => (
+                                    <SelectItem key={index} value={item.id}>
+                                        {item.branch}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
                     </div>
                     <div>
                         <div className="input-poster flex flex-col gap-[.5rem]">
                             <p>
-                                First Enter
+                                Pertama Masuk
                             </p>
                             <input type="date" className="px-[1rem] py-[.7rem] rounded-[.5rem] outline-none border border-main-gray-border w-full"
                                 value={inputData.firstEnter}

@@ -32,11 +32,14 @@ enum User_Role {
 model Employee {
   id          String   @id @default(uuid())
   name        String
-  member      Int
+  branch_id   String   @default("01196e6a-1e4c-4574-962c-aeaab6cf5fe9")
+  // member      Int
   first_enter DateTime
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  Branch Branch @relation(fields: [branch_id], references: [id], onDelete: Cascade)
 
   Attendance_Data Attendance_Data[]
   Employee_Salary Employee_Salary[]
@@ -76,8 +79,9 @@ model Branch {
   id     String @id @default(uuid())
   branch String
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  Employee  Employee[]
 }
 
 enum Attendance_Type {

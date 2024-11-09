@@ -20,7 +20,11 @@ export interface EmployeeProps {
     permit: number,
     overtime: number,
     pay_day_count: number,
-    total_salary: number
+    total_salary: number,
+    Branch: {
+        id: string;
+        branch: string;
+    }
 }
 
 export interface EditEmployeeProps {
@@ -37,7 +41,7 @@ type Filter = {
 
 
 
-export default function Employee2() {
+export default function Employee() {
 
     const [filter, setFilter] = useState<Filter>({
         active: false,
@@ -240,9 +244,6 @@ export default function Employee2() {
                             <SelectItem value="name">
                                 By Name
                             </SelectItem>
-                            <SelectItem value="member">
-                                By Member
-                            </SelectItem>
                         </SelectContent>
                     </Select>
                     <div className="relative">
@@ -329,7 +330,7 @@ export default function Employee2() {
                 </div>
 
                 <Link to={"/employee/add"} className="hidden md:block shrink-0 bg-main-purple text-main font-[500] px-[1.5rem] py-[.8rem] rounded-[1rem] hover:bg-main-purple-hover active:bg-main-purple duration-200 shadow-table-black">
-                    Add Employee
+                    Tambah Karyawan
                 </Link>
             </div>
 
@@ -348,22 +349,25 @@ export default function Employee2() {
                                 Member
                             </th>
                             <th className={`select-text text-center bg-white p-[1rem] font-[500] md:text-[1rem]`}>
-                                First Enter
+                                Cabang
                             </th>
                             <th className={`select-text text-center bg-white p-[1rem] font-[500] md:text-[1rem]`}>
-                                Attendace
+                                Pertama Masuk
                             </th>
                             <th className={`select-text text-center bg-white p-[1rem] font-[500] md:text-[1rem]`}>
-                                Permit
+                                Hadir
                             </th>
                             <th className={`select-text text-center bg-white p-[1rem] font-[500] md:text-[1rem]`}>
-                                Overtime
+                                Izin
                             </th>
                             <th className={`select-text text-center bg-white p-[1rem] font-[500] md:text-[1rem]`}>
-                                Pay Day Salary
+                                Lembur
                             </th>
                             <th className={`select-text text-center bg-white p-[1rem] font-[500] md:text-[1rem]`}>
-                                Total Salary
+                                Total Gajian
+                            </th>
+                            <th className={`select-text text-center bg-white p-[1rem] font-[500] md:text-[1rem]`}>
+                                Total Gaji
                             </th>
                             <th className={`select-text text-center rounded-tr-[.8rem] bg-white p-[1rem] font-[500] md:text-[1rem]`}>
                                 Action
@@ -381,6 +385,9 @@ export default function Employee2() {
                                 </td>
                                 <td className={`select-text text-center bg-white p-[1rem] md:text-[.9rem] font-[400] text-main-gray-text`}>
                                     {item.member}
+                                </td>
+                                <td className={`select-text text-center bg-white p-[1rem] md:text-[.9rem] font-[400] text-main-gray-text`}>
+                                    {item.Branch.branch}
                                 </td>
                                 <td className={`select-text text-center bg-white p-[1rem] md:text-[.9rem] font-[400] text-main-gray-text`}>
                                     {getDateString(item.first_enter)}

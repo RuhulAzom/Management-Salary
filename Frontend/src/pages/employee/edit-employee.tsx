@@ -9,9 +9,17 @@ import { Loader2 } from "lucide-react"
 type EditDataProps = {
     id: string,
     name: string,
-    member: string,
     first_enter: string,
+    branch_id: string;
     loading: boolean
+}
+
+interface BranchProps {
+    id: string;
+    branch: string;
+
+    createdAt: string;
+    updatedAt: string;
 }
 
 type Props = {
@@ -27,27 +35,33 @@ export default function EditEmployee({ data, setEdit, refresh }: Props) {
     // const [telp, setTelp] = useState<string>(data.telp || "")
     // const [alamat, setAlamat] = useState<string>(data.alamat || "")
     // const [loading, setLoading] = useState<boolean>(false)
+    const [branchData, setBranchData] = useState<BranchProps[]>([])
     const [editData, setEditData] = useState<EditDataProps>({
         id: "",
-        member: "",
         first_enter: "",
         name: "",
+        branch_id: "",
         loading: false
     })
 
     console.log(data)
 
-    useEffect(() => {
-        if (data) {
-            setEditData({
-                id: data.id,
-                member: data.member.toString(),
-                first_enter: data.first_enter,
-                name: data.name,
-                loading: false
+    const GetBranch = async () => {
+        try {
+            const res = await axios.get(`${API_URL}/branch`, {
+                headers: {
+                    Authorization: `bearer ${token}`
+                }
             })
+            console.log(res)
+            setBranchData([...res.data.data])
+            return;
+        } catch (error: any) {
+            console.log("Failed get branch:", error)
+            toastError({ error, message: "Failed Get branch" })
+            return error
         }
-    }, [data])
+    }
 
     const handleEditEmployee = async () => {
         setEditData(prev => ({ ...prev, loading: true }))
@@ -55,8 +69,8 @@ export default function EditEmployee({ data, setEdit, refresh }: Props) {
             const res = await axios.put(`${API_URL}/employee/edit`, {
                 id: editData.id,
                 name: editData.name,
-                member: parseInt(editData.member),
-                first_enter: editData.first_enter
+                first_enter: editData.first_enter,
+                branch_id: editData.branch_id
             }, {
                 headers: {
                     Authorization: `bearer ${token}`
@@ -75,6 +89,22 @@ export default function EditEmployee({ data, setEdit, refresh }: Props) {
             return error;
         }
     }
+
+    useEffect(() => {
+        if (data) {
+            setEditData({
+                id: data.id,
+                first_enter: data.first_enter,
+                name: data.name,
+                branch_id: data.Branch.id,
+                loading: false
+            })
+        }
+    }, [data])
+
+    useEffect(() => {
+        GetBranch()
+    }, [])
 
     if (!data) return null
 
@@ -101,18 +131,6 @@ export default function EditEmployee({ data, setEdit, refresh }: Props) {
                     </div>
 
                     <div id="nama" className="text-[.9rem] flex flex-col gap-[.2rem]">
-                        <p>Member</p>
-                        <input className="outline-none border border-black rounded-[.1rem] px-[1rem] py-[.5rem] w-full"
-                            type="number"
-                            placeholder="Input Member.."
-                            value={editData.member}
-                            onChange={(e) => {
-                                setEditData(prev => ({ ...prev, member: e.target.value }))
-                            }}
-                        />
-                    </div>
-
-                    <div id="nama" className="text-[.9rem] flex flex-col gap-[.2rem]">
                         <p>First Enter</p>
                         <input className="outline-none border border-black rounded-[.1rem] px-[1rem] py-[.5rem] w-full"
                             type="date"
@@ -122,6 +140,22 @@ export default function EditEmployee({ data, setEdit, refresh }: Props) {
                                 setEditData(prev => ({ ...prev, first_enter: e.target.value }))
                             }}
                         />
+                    </div>
+                    <div id="salary" className="text-[.9rem] flex flex-col gap-[.2rem]">
+                        <p>Salary per day</p>
+                        <select className="outline-none border border-black rounded-[.1rem] px-[1rem] py-[.5rem] w-full"
+                            value={editData.branch_id}
+                            onChange={(e) => {
+                                setEditData((prev) => ({ ...prev, branch_id: e.target.value }))
+                            }}
+                            required
+                        >
+                            {branchData.map((item, index) => (
+                                <option key={index} value={item.id}>
+                                    {item.branch}
+                                </option>
+                            ))}
+                        </select>
                     </div>
                     <div className="flex items-center gap-[1rem] w-full">
                         {!editData.loading &&

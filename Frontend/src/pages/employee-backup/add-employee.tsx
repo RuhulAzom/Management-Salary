@@ -15,7 +15,7 @@ interface InputDataProps {
     loading: boolean;
 }
 
-export default function AddEmploye() {
+export default function AddEmployee() {
 
     // const [name, setName] = useState<string>("")
     // const [member, setMember] = useState<string>("")
