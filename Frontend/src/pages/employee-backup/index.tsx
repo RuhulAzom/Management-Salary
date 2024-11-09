@@ -14,13 +14,19 @@ export interface EmployeeProps {
     member: number,
     name: string,
     first_enter: string,
-    createdAt: string,
-    updatedAt: string,
     attendance: number,
     permit: number,
     overtime: number,
-    pay_day_count: number,
-    total_salary: number
+    pay_day_data: {
+        month: number,
+        attendance: number,
+        permit: number,
+        overtime: number,
+        salary: number
+    }[],
+    total_salary: number,
+    createdAt: string,
+    updatedAt: string
 }
 
 export interface EditEmployeeProps {
@@ -37,7 +43,7 @@ type Filter = {
 
 
 
-export default function Employee2() {
+export default function Employee() {
 
     const [filter, setFilter] = useState<Filter>({
         active: false,
@@ -73,13 +79,13 @@ export default function Employee2() {
             setLoading({ active: true, for: "fetch" })
             let res;
             if (filter.active) {
-                res = await axios.get(`${API_URL}/employee/salary?start_date=${getDateForInput(filter.startDate)}&end_date=${getDateForInput(filter.endDate)}&page=${page}`, {
+                res = await axios.get(`${API_URL}/employee?start_date=${getDateForInput(filter.startDate)}&end_date=${getDateForInput(filter.endDate)}&page=${page}`, {
                     headers: {
                         Authorization: `bearer ${token}`
                     }
                 })
             } else {
-                res = await axios.get(`${API_URL}/employee/salary?page=${page}`, {
+                res = await axios.get(`${API_URL}/employee?page=${page}`, {
                     headers: {
                         Authorization: `bearer ${token}`
                     }
@@ -179,13 +185,13 @@ export default function Employee2() {
         await getEmployee(1)
     }
 
-    const getDetailHref = (employeeId: string, name: string, first_enter?: string): string => {
+    const getDetailHref = (id: string, first_enter?: string): string => {
         if (filter.active) {
-            return `/employee/detail?employee_id=${employeeId}&name=${name}&startDate=${filter.startDate}&endDate=${filter.endDate}`;
+            return `/employee-backup/detail/${id}?startDate=${filter.startDate}&endDate=${filter.endDate}`;
         } else if (first_enter) {
             const firstDate = getDateForInput(`${new Date(first_enter)}`);
             const currentDate = getDateForInput(`${new Date()}`)
-            return `/employee/detail?employee_id=${employeeId}&name=${name}&startDate=${firstDate}&endDate=${currentDate}`
+            return `/employee-backup/detail/${id}?startDate=${firstDate}&endDate=${currentDate}`
         }
         return `undefined`
     }
@@ -395,7 +401,7 @@ export default function Employee2() {
                                     {item.overtime}
                                 </td>
                                 <td className={`select-text text-center bg-white p-[1rem] md:text-[.9rem] font-[400] text-main-gray-text`}>
-                                    {item.pay_day_count}
+                                    {item.pay_day_data.length}
                                 </td>
                                 <td className={`select-text text-center bg-white p-[1rem] md:text-[.9rem] font-[400] text-main-gray-text`}>
                                     {`Rp. ${item.total_salary.toLocaleString("id-ID", { style: "decimal" })}`}
@@ -412,7 +418,7 @@ export default function Employee2() {
                                         >
                                             Delete
                                         </button>
-                                        <Link to={getDetailHref(item.id, item.name, item.first_enter)} className="bg-orange-100 text-orange-600 py-[.8rem] px-[1rem] font-[600] rounded-[1rem] hover:bg-orange-200 active:bg-orange-100"
+                                        <Link to={getDetailHref(item.id, item.first_enter)} className="bg-orange-100 text-orange-600 py-[.8rem] px-[1rem] font-[600] rounded-[1rem] hover:bg-orange-200 active:bg-orange-100"
                                             onClick={() => { setModalDelete((prev) => ({ ...prev, title: item.name, show: true, id: item.id })) }}
                                         >
                                             Detail

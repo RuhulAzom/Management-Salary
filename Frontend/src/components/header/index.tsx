@@ -11,7 +11,7 @@ export default function Header({ setShowSidebar }: { setShowSidebar: React.Dispa
     return (
         <div className="flex items-center h-full px-[1.5rem] md:px-[1rem] justify-between">
             <p className="hidden md:block font-[500] text-main-heading-text text-[1.5rem] sansita tracking-wide">
-                Mediatama Web
+                Nazea Mart
             </p>
             <div className="md:hidden" onClick={() => { setShowSidebar((prev) => !prev) }}>
                 <Menu />

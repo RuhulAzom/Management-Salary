@@ -98,4 +98,69 @@ export const firstSalary = 40000
 export const secondSalary = 50000
 export const normalSalary = 60000
 export const overtimeSalary = 50000
-export const member = 2000
+export const memberSalary = 2000
+
+export const numberToWords = (num: number) => {
+  if (num === 0) return "Nol";
+
+  const angka = [
+    "", "Satu", "Dua", "Tiga", "Empat", "Lima",
+    "Enam", "Tujuh", "Delapan", "Sembilan"
+  ];
+  const tingkat = [
+    "", "Ribu", "Juta", "Miliar", "Triliun"
+  ];
+
+  let result = "";
+  let tingkatIndex = 0;
+
+  while (num > 0) {
+    const tigaDigit = num % 1000;
+    if (tigaDigit > 0) {
+      const ratusan = Math.floor(tigaDigit / 100);
+      const puluhan = Math.floor((tigaDigit % 100) / 10);
+      let satuan = tigaDigit % 10;
+
+      let bagian = "";
+
+      // Handle ratusan
+      if (ratusan > 0) {
+        if (ratusan === 1) {
+          bagian += "Seratus ";
+        } else {
+          bagian += angka[ratusan] + " Ratus ";
+        }
+      }
+
+      // Handle puluhan
+      if (puluhan > 0) {
+        if (puluhan === 1) {
+          const belas = satuan === 0 ? "Sepuluh" : satuan === 1 ? "Sebelas" : angka[satuan] + " Belas";
+          bagian += belas + " ";
+          satuan = 0; // Sudah diproses sebagai "belas", jadi set ke nol
+        } else {
+          bagian += angka[puluhan] + " Puluh ";
+        }
+      }
+
+      // Handle satuan
+      if (satuan > 0) {
+        if (puluhan === 0) { // Untuk mencegah dobel spasi
+          bagian += angka[satuan] + " ";
+        }
+      }
+
+      // Tambahkan tingkatan (ribu, juta, dll.)
+      if (tingkat[tingkatIndex] !== "") {
+        bagian += tingkat[tingkatIndex] + " ";
+      }
+
+      result = bagian + result;
+    }
+
+    num = Math.floor(num / 1000);
+    tingkatIndex++;
+  }
+
+  return result.trim();
+};

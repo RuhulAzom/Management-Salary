@@ -32,7 +32,7 @@ export default function Sidebar({ setShowSidebar }: { setShowSidebar: React.Disp
                         Dashboard
                     </p>
                 </Link>
-                <Link to={"/employee"} className={`flex items-center gap-[1rem] py-[.8rem] px-[1rem] rounded-[.8rem] ${pathname.includes("/employee") ? "bg-main-purple text-main" : "text-main-gray-text hover:bg-main-hover hover:text-white duration-300 active:bg-main"}`}
+                <Link to={"/employee"} className={`flex items-center gap-[1rem] py-[.8rem] px-[1rem] rounded-[.8rem] ${pathname === "/employee" ? "bg-main-purple text-main" : "text-main-gray-text hover:bg-main-hover hover:text-white duration-300 active:bg-main"}`}
                     onClick={() => { setShowSidebar(false) }}
                 >
                     <i className='bx bx-transfer-alt text-[1.5rem]' />
@@ -40,7 +40,15 @@ export default function Sidebar({ setShowSidebar }: { setShowSidebar: React.Disp
                         Employee
                     </p>
                 </Link>
-                <Link to={"/attendance"} className={`flex items-center gap-[1rem] py-[.8rem] px-[1rem] rounded-[.8rem] ${pathname.includes("/attendance") ? "bg-main-purple text-main" : "text-main-gray-text hover:bg-main-hover hover:text-white duration-300 active:bg-main"}`}
+                {/* <Link to={"/employee-backup"} className={`flex items-center gap-[1rem] py-[.8rem] px-[1rem] rounded-[.8rem] ${pathname.includes("/employee-backup") ? "bg-main-purple text-main" : "text-main-gray-text hover:bg-main-hover hover:text-white duration-300 active:bg-main"}`}
+                    onClick={() => { setShowSidebar(false) }}
+                >
+                    <i className='bx bx-transfer-alt text-[1.5rem]' />
+                    <p>
+                        Employee Backup
+                    </p>
+                </Link> */}
+                {/* <Link to={"/attendance"} className={`flex items-center gap-[1rem] py-[.8rem] px-[1rem] rounded-[.8rem] ${pathname.includes("/attendance") ? "bg-main-purple text-main" : "text-main-gray-text hover:bg-main-hover hover:text-white duration-300 active:bg-main"}`}
                     onClick={() => { setShowSidebar(false) }}
                 >
                     <i className='bx bx-check-double text-[1.5rem]'></i>
@@ -48,6 +56,14 @@ export default function Sidebar({ setShowSidebar }: { setShowSidebar: React.Disp
                         Attendance
                     </p>
                 </Link>
+                <Link to={"/salary"} className={`flex items-center gap-[1rem] py-[.8rem] px-[1rem] rounded-[.8rem] ${pathname.includes("/salary") ? "bg-main-purple text-main" : "text-main-gray-text hover:bg-main-hover hover:text-white duration-300 active:bg-main"}`}
+                    onClick={() => { setShowSidebar(false) }}
+                >
+                    <i className='bx bx-transfer-alt text-[1.5rem]' />
+                    <p>
+                        Salary
+                    </p>
+                </Link> */}
             </div>
 
             <div className={`flex items-center gap-[1rem] px-[1rem] rounded-[.8rem] text-main-gray-text hover:text-main duration-300 active:bg-main absolute bottom-8 md:bottom-0 left-0 w-fit h-fit cursor-pointer`}

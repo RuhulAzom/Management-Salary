@@ -4,7 +4,7 @@ import { Link, useParams, useSearchParams } from "react-router-dom"
 import logo from "@/_assets/logo.png"
 import toast from "react-hot-toast"
 import { API_URL } from "@/env"
-import { cn, getDateGroup, getDateString, member, overtimeSalary, token } from "@/lib/utils"
+import { cn, getDateGroup, getDateString, memberSalary, overtimeSalary, token } from "@/lib/utils"
 import LoadingPageWithText from "@/components/loading/loading-page"
 
 interface DataProps {
@@ -404,10 +404,10 @@ export default function DetailSalaryEmployee() {
                                         </div>
                                     </div>
                                     <div id="field" className="px-[1rem] py-[.2rem] border-l border-b border-main-gray-border font-[600]">
-                                        <p>{data.member}x Rp. {member.toLocaleString("id-ID", { style: "decimal" })}</p>
+                                        <p>{data.member}x Rp. {memberSalary.toLocaleString("id-ID", { style: "decimal" })}</p>
                                     </div>
                                     <div id="field" className="px-[1rem] py-[.2rem] border-l border-b border-r border-main-gray-border font-[600]">
-                                        <p>Rp {(data.member * member).toLocaleString("id-ID", { style: "decimal" })}</p>
+                                        <p>Rp {(data.member * memberSalary).toLocaleString("id-ID", { style: "decimal" })}</p>
                                     </div>
                                 </div>
 
@@ -417,7 +417,7 @@ export default function DetailSalaryEmployee() {
                                     </div>
                                     <div id="field" className="col-span-1 px-[1rem] py-[.2rem] border-l border-b border-r border-main-gray-border bg-main-gray-border2 font-[600]">
                                         <p className="break-words">
-                                            {((item.attendance * item.salary) + (item.overtime * overtimeSalary) + (data.member * member)).toLocaleString("id-ID", { style: "currency", currency: "IDR" })}
+                                            {((item.attendance * item.salary) + (item.overtime * overtimeSalary) + (data.member * memberSalary)).toLocaleString("id-ID", { style: "currency", currency: "IDR" })}
                                         </p>
                                     </div>
                                 </div>

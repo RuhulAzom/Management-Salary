@@ -1,12 +1,10 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
-import { Link } from "react-router-dom"
+import { useSearchParams } from "react-router-dom"
 import toast from "react-hot-toast"
 import { API_URL } from "@/env"
 import { getDateString, toastError, token } from "@/lib/utils"
-import InputText from "@/components/_sub-components/input-text"
 import LoadingPageWithText from "@/components/loading/loading-page"
-import { EmployeeProps } from "../employee"
 import AddAttendance from "./add-attendance"
 import { Loader2 } from "lucide-react"
 import ModalDelete, { ModalDeleteProps } from "@/components/_sub-components/modal-delete"
@@ -33,14 +31,18 @@ export interface EditAttendanceProps {
 }
 
 export default function Attendance() {
+    const [searchParams] = useSearchParams();
+
+    const employeeId = searchParams.get("employee_id");
+    const name = searchParams.get("name");
 
     const [loading, setLoading] = useState<boolean>(false)
     const [loadingFetch, setLoadingFetch] = useState<boolean>(false)
     const [page, setPage] = useState<number>(1)
     const [totalPages, setTotalPages] = useState<number>(1)
 
-    const [searchData, setSearchData] = useState<EmployeeProps[]>([])
-    const [showSearchData, setShowSearchData] = useState<boolean>(false)
+    // const [searchData, setSearchData] = useState<EmployeeProps[]>([])
+    // const [showSearchData, setShowSearchData] = useState<boolean>(false)
 
     const [attendanceData, setAttendanceData] = useState<AttendanceDataProps[]>([])
 
@@ -67,40 +69,40 @@ export default function Attendance() {
         show: false
     })
 
-    const getEmployeeData = async () => {
-        try {
-            const res = await axios.get(`${API_URL}/employee?page=1`, {
-                headers: {
-                    Authorization: `bearer ${token}`
-                }
-            })
-            console.log(res)
-            setSearchData([...res.data.data])
-            return;
-        } catch (error: any) {
-            console.log("Failed get customer:", error)
-            toastError({ error, message: "Failed Get customer" })
-            return error
-        }
-    }
+    // const getEmployeeData = async () => {
+    //     try {
+    //         const res = await axios.get(`${API_URL}/employee?page=1`, {
+    //             headers: {
+    //                 Authorization: `bearer ${token}`
+    //             }
+    //         })
+    //         console.log(res)
+    //         setSearchData([...res.data.data])
+    //         return;
+    //     } catch (error: any) {
+    //         console.log("Failed get customer:", error)
+    //         toastError({ error, message: "Failed Get customer" })
+    //         return error
+    //     }
+    // }
 
-    const searchByName = async () => {
-        try {
-            const res = await axios.get(`${API_URL}/employee/search?name=${inputData.name}&page=1`, {
-                headers: {
-                    Authorization: `bearer ${token}`
-                }
-            })
-            console.log("1111", res)
-            setSearchData([...res.data.data])
-            return;
-        } catch (error) {
-            console.log("Failed Search Employee:", error)
-            // toastError({ error, message: "Failed Search Employee" })
-            setSearchData([])
-            return error
-        }
-    }
+    // const searchByName = async () => {
+    //     try {
+    //         const res = await axios.get(`${API_URL}/employee/search?name=${inputData.name}&page=1`, {
+    //             headers: {
+    //                 Authorization: `bearer ${token}`
+    //             }
+    //         })
+    //         console.log("1111", res)
+    //         setSearchData([...res.data.data])
+    //         return;
+    //     } catch (error) {
+    //         console.log("Failed Search Employee:", error)
+    //         // toastError({ error, message: "Failed Search Employee" })
+    //         setSearchData([])
+    //         return error
+    //     }
+    // }
 
     const getAttendanceById = async (id: string, page: number) => {
         setLoadingFetch(true)
@@ -155,13 +157,34 @@ export default function Attendance() {
     }
 
     useEffect(() => {
-        getEmployeeData()
+        // getEmployeeData()
+        if (employeeId && name) {
+            getAttendanceById(employeeId, 1)
+            setInputData(prev => ({
+                ...prev,
+                name: name,
+                id: employeeId,
+                disabled: true
+            }))
+        }
     }, [])
 
     useEffect(() => {
-        if (inputData.name.length > 0) searchByName()
-        if (inputData.name.length === 0) getEmployeeData()
-    }, [inputData.name])
+        if (employeeId && name) {
+            getAttendanceById(employeeId, 1)
+            setInputData(prev => ({
+                ...prev,
+                name: name,
+                id: employeeId,
+                disabled: true
+            }))
+        }
+    }, [employeeId, name])
+
+    // useEffect(() => {
+    //     if (inputData.name.length > 0) searchByName()
+    //     if (inputData.name.length === 0) getEmployeeData()
+    // }, [inputData.name])
 
     useEffect(() => {
         if (inputData.id.length > 0) getAttendanceById(inputData.id, page)
@@ -169,7 +192,7 @@ export default function Attendance() {
 
 
     return (
-        <div className="px-[1rem] md:px-[4rem] py-[2rem] bg-body">
+        <div className="p-0 bg-body">
 
             <ModalDelete data={modalDelete} setDelete={setModalDelete} onClick={handleDelete} />
             <LoadingPageWithText heading="Deleting Attendance...." loading={loading} />
@@ -195,16 +218,16 @@ export default function Attendance() {
                     }}
                 />
             )}
-
+            {/* 
             <Link to={"/employee"} className="flex gap-[1rem] justify-start items-center mb-[2rem] hover:bg-main-gray-border cursor-pointer select-none w-fit px-[.8rem] rounded-[1rem] duration-300">
                 <i className='bx bx-arrow-back text-[1.5rem]' />
                 <p className="text-[1.5rem]">
                     Back
                 </p>
-            </Link>
+            </Link> */}
 
-            <div className="rounded-sm bg-white shadow-xl">
-                <div className="border-b py-4 px-[1.5rem]">
+            <div className="rounded-sm bg-white">
+                <div className="border-b py-4 px-[1.5rem] flex w-full justify-between items-center">
                     <div className="flex">
                         <div className="pr-4">
                             <h3 className="font-medium text-black dark:text-white">
@@ -212,9 +235,19 @@ export default function Attendance() {
                             </h3>
                         </div>
                     </div>
+                    {inputData.disabled && !loadingFetch && (
+                        <button
+                            className="bg-main-purple font-[500] hover:bg-main-hover hover:text-white duration-200 text-main py-[.8rem] px-[1rem] rounded-[.8rem]"
+                            onClick={() => {
+                                setAddData({ id: inputData.id, name: inputData.name, show: true })
+                            }}
+                        >
+                            Add Attendance
+                        </button>
+                    )}
                 </div>
                 <div className="flex flex-col gap-[1.5rem] p-[1.5rem]">
-                    <div className="relative">
+                    {/* <div className="relative">
                         {inputData.disabled && (
                             <div className="absolute top-[.2rem] left-[3.5rem] text-[.7rem] bg-main text-white py-[.2rem] px-[1rem] rounded-[.5rem] cursor-pointer hover:bg-main-hover active:bg-main"
                                 onClick={() => {
@@ -265,9 +298,9 @@ export default function Attendance() {
                                 ))}
                             </div>
                         )}
-                    </div>
+                    </div> */}
 
-                    {inputData.disabled && !loadingFetch && (
+                    {/* {inputData.disabled && !loadingFetch && (
                         <div className="flex justify-end p-4">
                             <button
                                 className="bg-main-purple font-[500] hover:bg-main-hover hover:text-white duration-200 text-main py-[.8rem] px-[1rem] rounded-[.8rem]"
@@ -278,7 +311,7 @@ export default function Attendance() {
                                 Add Attendance
                             </button>
                         </div>
-                    )}
+                    )} */}
 
                     {inputData.disabled && !loadingFetch && (
                         <div className="w-full">
