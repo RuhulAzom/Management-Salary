@@ -486,36 +486,76 @@ exports.GetEmployeeAndSalary = async (req, res) => {
         const skip = (page * take) - take;
         const start_date = req.query.start_date
         const end_date = req.query.end_date
-        // const start_date = "2024-06-01"
-        // const end_date = "2024-12-01"
+        const branch_id = req.query.branch_id;
         console.log({ start_date, end_date })
         let data = []
+        let total_employee = await prisma.employee.count()
 
         if (start_date && end_date) {
-            data = await prisma.employee.findMany({
-                take,
-                skip,
-                include: {
-                    Employee_Salary: {
-                        where: {
-                            AND: [
-                                { start_date: { gte: new Date(start_date) } },
-                                { end_date: { lte: new Date(end_date) } }
-                            ]
-                        }
+            if (branch_id) {
+                data = await prisma.employee.findMany({
+                    where: {
+                        branch_id
                     },
-                    Branch: true
-                }
-            })
+                    take,
+                    skip,
+                    include: {
+                        Employee_Salary: {
+                            where: {
+                                AND: [
+                                    { start_date: { gte: new Date(start_date) } },
+                                    { end_date: { lte: new Date(end_date) } }
+                                ]
+                            }
+                        },
+                        Branch: true
+                    }
+                })
+                total_employee = await prisma.employee.count({
+                    where: { branch_id }
+                })
+            } else {
+                data = await prisma.employee.findMany({
+                    take,
+                    skip,
+                    include: {
+                        Employee_Salary: {
+                            where: {
+                                AND: [
+                                    { start_date: { gte: new Date(start_date) } },
+                                    { end_date: { lte: new Date(end_date) } }
+                                ]
+                            }
+                        },
+                        Branch: true
+                    }
+                })
+            }
+
         } else {
-            data = await prisma.employee.findMany({
-                take,
-                skip,
-                include: {
-                    Employee_Salary: true,
-                    Branch: true
-                }
-            })
+            if (branch_id) {
+                data = await prisma.employee.findMany({
+                    where: { branch_id },
+                    take,
+                    skip,
+                    include: {
+                        Employee_Salary: true,
+                        Branch: true
+                    }
+                })
+                total_employee = await prisma.employee.count({
+                    where: { branch_id }
+                })
+            } else {
+                data = await prisma.employee.findMany({
+                    take,
+                    skip,
+                    include: {
+                        Employee_Salary: true,
+                        Branch: true
+                    }
+                })
+            }
         }
 
 
@@ -558,7 +598,6 @@ exports.GetEmployeeAndSalary = async (req, res) => {
             })
         }
 
-        const total_employee = await prisma.employee.count()
 
         const total_page = Math.ceil(total_employee / take)
 

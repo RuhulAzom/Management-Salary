@@ -6,7 +6,6 @@ const { prisma, bcrypt, jwt, secretKeyJwt } = require("../utils")
 @param {import("express").Request} req
 @param {import("express").Response} res
 */
-
 exports.Register = async (req, res) => {
     try {
         const { email, password, username } = req.body
@@ -52,7 +51,6 @@ exports.Register = async (req, res) => {
 @param {import("express").Request} req
 @param {import("express").Response} res
 */
-
 exports.Login = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -94,7 +92,6 @@ exports.Login = async (req, res) => {
 @param {import("express").Request} req
 @param {import("express").Response} res
 */
-
 exports.CheckToken = async (req, res) => {
     try {
         return res.status(200).json({

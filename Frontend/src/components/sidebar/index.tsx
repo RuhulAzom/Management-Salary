@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import logo from "@/_assets/logo.png"
-import { ArrowLeft } from "lucide-react"
+import { ArrowLeft, GitBranch, LayoutDashboard, User2 } from "lucide-react"
 import { Logout } from "@/lib/utils";
 
 
@@ -27,15 +27,15 @@ export default function Sidebar({ setShowSidebar }: { setShowSidebar: React.Disp
                 <Link to={"/"} className={`flex items-center gap-[1rem] py-[.8rem] px-[1rem] rounded-[.8rem] ${pathname === "/" ? "bg-main-purple text-main" : "text-main-gray-text hover:bg-main-hover hover:text-white duration-300 active:bg-main"}`}
                     onClick={() => { setShowSidebar(false) }}
                 >
-                    <i className='bx bxs-dashboard text-[1.5rem]' />
+                    <LayoutDashboard />
                     <p>
                         Dashboard
                     </p>
                 </Link>
-                <Link to={"/employee"} className={`flex items-center gap-[1rem] py-[.8rem] px-[1rem] rounded-[.8rem] ${pathname === "/employee" ? "bg-main-purple text-main" : "text-main-gray-text hover:bg-main-hover hover:text-white duration-300 active:bg-main"}`}
+                <Link to={"/employee"} className={`flex items-center gap-[1rem] py-[.8rem] px-[1rem] rounded-[.8rem] ${pathname.includes("/employee") ? "bg-main-purple text-main" : "text-main-gray-text hover:bg-main-hover hover:text-white duration-300 active:bg-main"}`}
                     onClick={() => { setShowSidebar(false) }}
                 >
-                    <i className='bx bx-transfer-alt text-[1.5rem]' />
+                    <User2 />
                     <p>
                         Karyawan
                     </p>
@@ -43,7 +43,7 @@ export default function Sidebar({ setShowSidebar }: { setShowSidebar: React.Disp
                 <Link to={"/branch"} className={`flex items-center gap-[1rem] py-[.8rem] px-[1rem] rounded-[.8rem] ${pathname.includes("/branch") ? "bg-main-purple text-main" : "text-main-gray-text hover:bg-main-hover hover:text-white duration-300 active:bg-main"}`}
                     onClick={() => { setShowSidebar(false) }}
                 >
-                    <i className='bx bx-transfer-alt text-[1.5rem]' />
+                    <GitBranch />
                     <p>
                         Cabang
                     </p>

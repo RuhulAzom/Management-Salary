@@ -8,6 +8,8 @@ import ModalDelete, { ModalDeleteProps } from "@/components/_sub-components/moda
 import LoadingPageWithText from "@/components/loading/loading-page";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import EditEmployee from "./edit-employee";
+import { BranchProps } from "../branch";
+import { ListFilter } from "lucide-react";
 
 export interface EmployeeProps {
     id: string,
@@ -49,10 +51,12 @@ export default function Employee() {
         startDate: "",
         endDate: ""
     })
+    const [branchId, setBranchId] = useState<string | null>(null)
 
     const [triggerFilter, setTriggerFilter] = useState<number>(0)
 
     const [data, setData] = useState<EmployeeProps[]>([])
+    const [branchData, setBranchData] = useState<BranchProps[]>([])
     const [loading, setLoading] = useState<{ active: boolean, for: "delete" | "fetch" | "off" }>({
         active: false,
         for: "delete"
@@ -77,17 +81,33 @@ export default function Employee() {
             setLoading({ active: true, for: "fetch" })
             let res;
             if (filter.active) {
-                res = await axios.get(`${API_URL}/employee/salary?start_date=${getDateForInput(filter.startDate)}&end_date=${getDateForInput(filter.endDate)}&page=${page}`, {
-                    headers: {
-                        Authorization: `bearer ${token}`
-                    }
-                })
+                if (branchId) {
+                    res = await axios.get(`${API_URL}/employee/salary?start_date=${getDateForInput(filter.startDate)}&end_date=${getDateForInput(filter.endDate)}&branch_id=${branchId}&page=${page}`, {
+                        headers: {
+                            Authorization: `bearer ${token}`
+                        }
+                    })
+                } else {
+                    res = await axios.get(`${API_URL}/employee/salary?start_date=${getDateForInput(filter.startDate)}&end_date=${getDateForInput(filter.endDate)}&page=${page}`, {
+                        headers: {
+                            Authorization: `bearer ${token}`
+                        }
+                    })
+                }
             } else {
-                res = await axios.get(`${API_URL}/employee/salary?page=${page}`, {
-                    headers: {
-                        Authorization: `bearer ${token}`
-                    }
-                })
+                if (branchId) {
+                    res = await axios.get(`${API_URL}/employee/salary?branch_id=${branchId}&page=${page}`, {
+                        headers: {
+                            Authorization: `bearer ${token}`
+                        }
+                    })
+                } else {
+                    res = await axios.get(`${API_URL}/employee/salary?page=${page}`, {
+                        headers: {
+                            Authorization: `bearer ${token}`
+                        }
+                    })
+                }
             }
 
             console.log(res)
@@ -102,6 +122,23 @@ export default function Employee() {
             return error
         }
     }
+    const getBranchData = async () => {
+        try {
+            const res = await axios.get(`${API_URL}/branch`, {
+                headers: {
+                    Authorization: `bearer ${token}`
+                }
+            })
+            console.log(res)
+            setBranchData([...res.data.data])
+            return;
+        } catch (error: any) {
+            console.log("Failed get branch:", error)
+            toastError({ error, message: "Failed Get branch" })
+            return error
+        }
+    }
+
 
     const searchByType = async ({ page, type }: { page: number, type: "member" | "name" }) => {
         try {
@@ -135,6 +172,10 @@ export default function Employee() {
     }
 
     useEffect(() => {
+        getBranchData()
+    }, [])
+
+    useEffect(() => {
         if (searchValue.length === 0) {
             getEmployee(page)
         } else {
@@ -150,7 +191,7 @@ export default function Employee() {
 
     useEffect(() => {
         getEmployee(1)
-    }, [filter.active, triggerFilter])
+    }, [filter.active, triggerFilter, branchId])
 
     const deleteEmployee = async (id: string) => {
         setLoading({ active: true, for: "delete" })
@@ -215,7 +256,7 @@ export default function Employee() {
             </div>
 
             <div className="flex w-full items-center justify-between gap-[1rem]">
-                <div className="flex items-center gap-[2rem]">
+                <div className="flex items-center gap-[2rem] flex-wrap">
                     <form className="w-full xl:w-fit relative flex items-center text-main-gray-text" onSubmit={(e) => {
                         e.preventDefault();
                         if (searchValue.length === 0) {
@@ -237,7 +278,7 @@ export default function Employee() {
                         }
                     </form>
                     <Select value={typeSearch} onValueChange={(value) => value && setTypeSearch(value as "member" | "name")}>
-                        <SelectTrigger className="flex shrink-0 ml-[-1rem] items-center gap-[.5rem] bg-white w-fit h-[42px] px-[1rem] rounded-[.8rem] shadow-table-black text-main-gray-text cursor-pointer border border-white hover:border-main-gray-border active:border-white duration-300 outline-none select-none">
+                        <SelectTrigger className="flex shrink-0 ml-[-1rem] items-center gap-[.5rem] bg-white w-fit h-[42px] px-[1rem] rounded-[.8rem] shadow-table-black text-main-gray-text cursor-pointer border border-white hover:border-main-gray-border active:border-white duration-300 outline-none select-none focus:ring-0 focus:ring-offset-0">
                             <SelectValue placeholder="Search" />
                         </SelectTrigger>
                         <SelectContent>
@@ -254,7 +295,7 @@ export default function Employee() {
                                 setFilter(prev => ({ ...prev, show: true }))
                             }}
                         >
-                            <i className='bx bx-filter text-[1.5rem]'></i>
+                            <ListFilter className="w-[1rem]" />
                             <p>Filter</p>
                         </div>
                         {filter.show && (
@@ -327,6 +368,27 @@ export default function Employee() {
                             />
                         )}
                     </div>
+                    <Select value={branchId ? branchId : "placeholder"} onValueChange={(value) => {
+                        if (value === "placeholder") {
+                            setBranchId(null)
+                        } else if (value) {
+                            setBranchId(value)
+                        }
+                    }} >
+                        <SelectTrigger className="flex shrink-0 ml-[-1rem] items-center gap-[.5rem] bg-white w-fit h-[42px] px-[1rem] rounded-[.8rem] shadow-table-black text-main-gray-text cursor-pointer border border-white hover:border-main-gray-border active:border-white duration-300 outline-none select-none focus:ring-0 focus:ring-offset-0">
+                            <SelectValue placeholder="Cabang" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="placeholder">
+                                Semua Cabang
+                            </SelectItem>
+                            {branchData.map((branch) => (
+                                <SelectItem key={branch.id} value={branch.id}>
+                                    {branch.branch}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
                 </div>
 
                 <Link to={"/employee/add"} className="hidden md:block shrink-0 bg-main-purple text-main font-[500] px-[1.5rem] py-[.8rem] rounded-[1rem] hover:bg-main-purple-hover active:bg-main-purple duration-200 shadow-table-black">

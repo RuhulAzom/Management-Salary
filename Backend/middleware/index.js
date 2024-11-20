@@ -20,12 +20,13 @@ const isAuthenticated = async (req, res, next) => {
         if (!token) return res.status(401).json({
             message: "Unauthorized",
         });
-        console.log("2", token)
+        // console.log("2", token)
 
         let userData = null;
         jwt.verify(token, secretKeyJwt, (error, decode) => {
             if (error) userData = null
             else userData = decode
+            // console.log("decode : ", decode)
         })
 
         if (userData) {
