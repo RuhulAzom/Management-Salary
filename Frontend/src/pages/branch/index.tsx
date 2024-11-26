@@ -40,6 +40,7 @@ export interface EditBranchProps {
 
 export default function Branch() {
   const [loading, setLoading] = useState<boolean>(false);
+  const [loadingDelete, setLoadingDelete] = useState<boolean>(false);
 
   const [branchData, setBranchData] = useState<BranchProps[]>([]);
 
@@ -119,20 +120,20 @@ export default function Branch() {
   // }
 
   const deleteBranch = async (id: string) => {
-    setLoading(true);
+    setLoadingDelete(true);
     try {
       const res = await axios.delete(`${API_URL}/branch/delete?id=${id}`, {
         headers: {
           Authorization: `bearer ${token}`,
         },
       });
-      setLoading(false);
+      setLoadingDelete(false);
       console.log(res);
       toast.success("Succes To Delete Branch");
       setModalDelete((prev) => ({ ...prev, show: false, id: "" }));
     } catch (error) {
       console.log("Failed delete Branch:", error);
-      setLoading(false);
+      setLoadingDelete(false);
       toast.error("Failed To Delete Branch");
       setModalDelete((prev) => ({ ...prev, show: false, id: "" }));
       return error;
@@ -180,15 +181,16 @@ export default function Branch() {
   };
 
   return (
-    <div className="p-[2rem] bg-body">
+    <div className="p-[1rem] md:p-[2rem] bg-body">
       <ModalDelete
         data={modalDelete}
         setDelete={setModalDelete}
         onClick={handleDelete}
       />
+      <LoadingPageWithText heading="Adding Branch...." loading={loading} />
       <LoadingPageWithText
-        heading="Deleting Attendance...."
-        loading={loading}
+        heading="Delete Branch...."
+        loading={loadingDelete}
       />
 
       {editData.value && (

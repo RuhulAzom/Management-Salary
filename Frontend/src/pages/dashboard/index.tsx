@@ -116,8 +116,8 @@ const Dashboard = () => {
     <div className="py-[2rem] px-[1rem] md:px-[4rem] flex flex-col gap-[2rem] bg-body">
       <div
         className={cn(
-          "flex gap-[1rem]",
-          branchData.length > 0 && `grid grid-cols-${branchData.length + 1}`
+          "flex flex-col gap-[1rem]",
+          branchData.length > 0 && `md:grid grid-cols-${branchData.length + 1}`
         )}
       >
         <div className="col-span-1 flex flex-col gap-[.5rem] bg-white p-[2rem] rounded-[1rem] shadow-lg">
@@ -145,100 +145,7 @@ const Dashboard = () => {
           </div>
         ))}
       </div>
-      {/* <Select value={branchId ? branchId : "placeholder"} onValueChange={(value) => {
-                if (value === "placeholder") {
-                    setBranchId(null)
-                } else if (value) {
-                    setBranchId(value)
-                }
-            }} >
-                <SelectTrigger className="flex shrink-0 shadow-lg items-center gap-[.5rem] bg-white w-fit h-[42px] px-[1rem] rounded-[.8rem] shadow-table-black text-main-gray-text cursor-pointer border border-white hover:border-main-gray-border active:border-white duration-300 outline-none select-none focus:ring-0 focus:ring-offset-0">
-                    <SelectValue placeholder="Cabang" />
-                </SelectTrigger>
-                <SelectContent>
-                    <SelectItem value="placeholder">
-                        Semua Cabang
-                    </SelectItem>
-                    {branchData.map((branch) => (
-                        <SelectItem key={branch.id} value={branch.id}>
-                            {branch.branch}
-                        </SelectItem>
-                    ))}
-                </SelectContent>
-            </Select> */}
-      {/* <div className="flex flex-col gap-[2rem]">
-                {SalaryData.map((item) => {
-                    let total = 0;
-                    item.data.forEach((month) => {
-                        total += month.total_salary
-                    })
-                    return (
-                        <div key={item.year} className="bg-white flex flex-col p-[1rem] rounded-[1rem] shadow-lg">
-                            <div className="text-[1.3rem] font-[500] text-gray-500">
-                                Tahun {item.year}
-                            </div>
-                            <div className="w-full">
-                                <table className="w-full border-spacing-y-1 border-separate">
-                                    <thead>
-                                        <tr>
-                                            <th className="font-[500] p-[.5rem] text-center">
-                                                Bulan Ke
-                                            </th>
-                                            <th className="font-[500] p-[.5rem] text-start">
-                                                Bulan
-                                            </th>
-                                            <th className="font-[500] p-[.5rem] text-start">
-                                                Total
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {item.data.map((month, index) => (
-                                            <tr key={index}>
-                                                <td width={"100px"} className={cn("p-[.5rem] bg-main-purple text-center",
-                                                    "rounded-l-[1rem]"
-                                                )}>
-                                                    {month.month_number}
-                                                </td>
-                                                <td className={cn("p-[.5rem] bg-main-purple text-start",
-
-                                                )}>
-                                                    {month.month}
-                                                </td>
-                                                <td className={cn("p-[.5rem] bg-main-purple text-start",
-                                                    "rounded-r-[1rem]"
-                                                )}>
-                                                    Rp. {month.total_salary.toLocaleString("id-ID", { style: "decimal" })}
-                                                </td>
-                                            </tr>
-                                        ))}
-                                        <tr >
-                                            <td width={"100px"} className={cn("p-[.5rem] bg-main-purple text-center",
-                                                "rounded-l-[1rem]"
-                                            )}>
-
-                                            </td>
-                                            <td className={cn("p-[.5rem] bg-main-purple text-start",
-
-                                            )}>
-                                                <p className="font-[600]">
-                                                    Total :
-                                                </p>
-                                            </td>
-                                            <td className={cn("p-[.5rem] bg-main-purple text-start",
-                                                "rounded-r-[1rem] font-[600]"
-                                            )}>
-                                                Rp. {total.toLocaleString("id-ID", { style: "decimal" })}
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    )
-                })}
-            </div> */}
-      <div className="grid grid-cols-2 gap-x-[2rem] mt-[2rem]">
+      <div className="grid grid-cols-1 gap-y-[2rem] md:grid-cols-2 gap-x-[2rem] mt-[2rem]">
         {branchSalary.map((branch, index) => (
           <div
             key={index}

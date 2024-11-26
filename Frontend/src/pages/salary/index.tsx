@@ -325,75 +325,8 @@ export default function Salary() {
           )}
         </div>
         <div className="flex flex-col gap-[1.5rem] p-[1.5rem]">
-          {/* <div className="relative">
-                        {inputData.disabled && (
-                            <div className="absolute top-[.2rem] left-[3.5rem] text-[.7rem] bg-main text-white py-[.2rem] px-[1rem] rounded-[.5rem] cursor-pointer hover:bg-main-hover active:bg-main"
-                                onClick={() => {
-
-                                    setInputData(prev => ({
-                                        ...prev,
-                                        id: "",
-                                        disabled: false
-                                    }))
-                                }}
-                            >
-                                <p>Change</p>
-                            </div>
-                        )}
-                        <InputText
-                            heading="Name"
-                            placeholder="Input Name..."
-                            value={inputData.name}
-                            required
-                            disabled={inputData.disabled}
-                            onFocus={() => { setShowSearchData(true) }}
-                            onBlur={() => {
-                                setTimeout(() => {
-                                    setShowSearchData(false)
-                                }, 100);
-                            }}
-                            onChange={(e) => {
-                                setInputData(prev => ({ ...prev, name: e.target.value }))
-                            }}
-                        />
-                        {showSearchData && (
-                            <div className="absolute w-full h-fit top-[100%] left-0 flex flex-col bg-white border rounded-[.5rem]">
-                                {searchData.map((employe) => (
-                                    <div className="p-[.5rem] hover:bg-main-hover hover:text-white"
-                                        onClick={() => {
-                                            setPage(1)
-                                            getEmployeeSalaryById(employe.id, 1)
-                                            setInputData(prev => ({
-                                                ...prev,
-                                                name: employe.name,
-                                                id: employe.id,
-                                                disabled: true
-                                            }))
-                                            navigate(`/salary?employee_id=${employe.id}&name=${employe.name}`)
-                                        }}
-                                    >
-                                        {employe.name}
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                    </div> */}
-          {/* 
-                    {inputData.disabled && !loadingFetch && (
-                        <div className="flex justify-end p-4">
-                            <button
-                                className="bg-main-purple font-[500] hover:bg-main-hover hover:text-white duration-200 text-main py-[.8rem] px-[1rem] rounded-[.8rem]"
-                                onClick={() => {
-                                    setAddData({ id: inputData.id, name: inputData.name, show: true })
-                                }}
-                            >
-                                Add Salary
-                            </button>
-                        </div>
-                    )} */}
-
           {inputData.disabled && !loadingFetch && (
-            <div className="w-full">
+            <div className="w-full overflow-x-auto">
               <table className="w-full">
                 <thead>
                   <tr>
@@ -422,7 +355,7 @@ export default function Salary() {
                       <td className="p-[.5rem] text-center">
                         {page * 5 + (index + 1) - 5}
                       </td>
-                      <td className="p-[.5rem] text-start">
+                      <td className="p-[.5rem] text-start text-nowrap md:text-wrap">
                         {getDateString(item.start_date)} -{" "}
                         {getDateString(item.end_date)}
                       </td>
