@@ -359,7 +359,7 @@ exports.AddEmployeeSalary = async (req, res) => {
         overtime: data.overtime,
         overtime_data: data.overtime_data,
         overtime_salary: salary_per_day,
-        total_salary: data.total_salary,
+        total_salary: data.total_salary + member * memberSalary,
         salary_per_day,
       },
     });
@@ -378,7 +378,7 @@ exports.AddEmployeeSalary = async (req, res) => {
         overtime: data.overtime,
         overtime_data: data.overtime_data,
         overtime_salary: salary_per_day,
-        total_salary: data.total_salary,
+        total_salary: data.total_salary + member * memberSalary,
         salary_per_day,
       },
     });
@@ -471,7 +471,7 @@ exports.EditEmployeeSalaryById = async (req, res) => {
         overtime: data.overtime,
         overtime_data: data.overtime_data,
         overtime_salary: salary_per_day,
-        total_salary: data.total_salary,
+        total_salary: data.total_salary + member * memberSalary,
         salary_per_day: data.salary_per_day,
       },
     });
