@@ -444,6 +444,18 @@ exports.EditEmployeeSalaryById = async (req, res) => {
       },
     });
 
+    // console.log({
+    //   echeck: data,
+    //   attendance: salary_per_day * data.attendance,
+    //   overtime: salary_per_day * data.overtime,
+    //   member: member * memberSalary,
+    //   total:
+    //     salary_per_day * data.attendance +
+    //     salary_per_day * data.overtime +
+    //     member * memberSalary,
+    //   // total: data.total_salary + member * memberSalary,
+    //   // salary_per_day,
+    // });
     return res.status(200).json({
       status: 200,
       message: "Succesfully Edit Employee Salary",
@@ -1263,7 +1275,8 @@ const getDetailEmployeeDataObject2 = async ({
     overtime_salary: salary_per_day * overtime.length,
     permit: permit.length,
     permit_data: getDateGroup(permit.map((item) => item.date)),
-    total_salary: (attendance - permit.length) * salary_per_day,
+    total_salary:
+      (attendance + 1) * salary_per_day + salary_per_day * overtime.length,
   };
   return sendData;
 };
